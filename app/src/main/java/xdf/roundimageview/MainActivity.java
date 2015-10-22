@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-
 public class MainActivity extends Activity {
 
     private RoundImageView sampleImage;

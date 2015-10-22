@@ -127,6 +127,7 @@ public class RoundImageView extends ImageView {
         int squareWidth = 0, squareHeight = 0;
         int x = 0, y = 0;
         Bitmap squareBitmap;
+
         if (bmpHeight > bmpWidth) {// 高大于宽
             squareWidth = squareHeight = bmpWidth;
             x = 0;
