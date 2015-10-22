@@ -29,6 +29,8 @@
             android:layout_below="@+id/local_image"
             android:gravity="center"
             android:text="@string/localimage"
+            android:textColor="@color/white"
+            android:layout_marginTop="5dp"
             android:textSize="18dp" />
     </LinearLayout>
 
@@ -51,6 +53,8 @@
             android:layout_below="@+id/online_image"
             android:gravity="center"
             android:text="@string/onlineimage"
+            android:textColor="@color/white"
+            android:layout_marginTop="5dp"
             android:textSize="18dp" />
     </LinearLayout>
 
