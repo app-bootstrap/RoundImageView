@@ -1,5 +1,6 @@
 package xdf.roundimageview;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -12,8 +13,17 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+
+import java.io.File;
 
 public class RoundImageView extends ImageView {
     private int mBorderThickness = 0;
@@ -117,6 +127,7 @@ public class RoundImageView extends ImageView {
         int squareWidth = 0, squareHeight = 0;
         int x = 0, y = 0;
         Bitmap squareBitmap;
+
         if (bmpHeight > bmpWidth) {// 高大于宽
             squareWidth = squareHeight = bmpWidth;
             x = 0;
@@ -175,4 +186,37 @@ public class RoundImageView extends ImageView {
         canvas.drawCircle(defaultWidth / 2, defaultHeight / 2, radius, paint);
     }
 
+    public ImageLoader initImageLoader(String dirName) {
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        if (imageLoader.isInited()) {
+            imageLoader.destroy();
+        }
+        imageLoader.init(initImageLoaderConfig(dirName));
+        return imageLoader;
+    }
+
+    public ImageLoaderConfiguration initImageLoaderConfig(String dirName) {
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+                getContext()).threadPriority(Thread.NORM_PRIORITY - 2)
+                .threadPoolSize(3).memoryCacheSize(getMemoryCacheSize(getContext()))
+                .denyCacheImageMultipleSizesInMemory()
+                .discCacheFileNameGenerator(new Md5FileNameGenerator())
+                .discCache(new UnlimitedDiscCache(new File(dirName)))
+                .tasksProcessingOrder(QueueProcessingType.LIFO).build();
+        return config;
+    }
+
+    private int getMemoryCacheSize(Context context) {
+        int memoryCacheSize;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
+            int memClass = ((ActivityManager) context
+                    .getSystemService(Context.ACTIVITY_SERVICE))
+                    .getMemoryClass();
+            memoryCacheSize = (memClass / 8) * 1024 * 1024; // 1/8 of app memory
+            // limit
+        } else {
+            memoryCacheSize = 2 * 1024 * 1024;
+        }
+        return memoryCacheSize;
+    }
 }
