@@ -26,10 +26,10 @@ proguard/
 *.log
 
 #temp
-*.swp
-*.swo
 .DS_Store
 Thumbs.db
+*.sw*
+*.un~
 
 */keystore
 custom-versions/*
